@@ -1,0 +1,29 @@
+name: SQL Server Connection
+
+on:
+  workflow_dispatch: # Trigger manually or set on schedule or push
+
+jobs:
+  sql_connect:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Install SQL Tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mssql-tools unixodbc-dev
+
+    - name: Run SQL Command
+      env:
+        SQL_SERVER: externalworld.cent-su.org
+        SQL_PORT: 19001
+        SQL_USERNAME: readonlyuser
+        SQL_PASSWORD: rYsS2LBAX8xyMvJDR6jtr
+      run: |
+        sqlcmd -S ${{ env.SQL_SERVER }},${{ env.SQL_PORT }} \
+               -U ${{ env.SQL_USERNAME }} \
+               -P ${{ env.SQL_PASSWORD }} \
+               -Q "SELECT TOP 10 * FROM your_table"
